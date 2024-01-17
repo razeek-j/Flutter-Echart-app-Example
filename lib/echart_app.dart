@@ -52,9 +52,3 @@ class _ReactiveUpdatingExampleState extends State<ReactiveUpdatingExample> {
     );
   }
 }
-
-void main() {
-  runApp(MaterialApp(
-    home: ReactiveUpdatingExample(),
-  ));
-}
