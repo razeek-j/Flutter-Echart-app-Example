@@ -9,7 +9,7 @@ class Echart extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const Echartapp(),
+      home:  ReactiveUpdatingExample(),
       title: 'Charts',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
