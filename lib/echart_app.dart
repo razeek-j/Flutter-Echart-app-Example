@@ -1,3 +1,4 @@
+import 'package:echart_app/communication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
 
@@ -8,7 +9,7 @@ class ReactiveUpdatingExample extends StatefulWidget {
 }
 
 class _ReactiveUpdatingExampleState extends State<ReactiveUpdatingExample> {
-  List<double> data = [30.0, 50.0, 80.0];
+  List<double> data = [10.0, 60.0, 70.0];
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +46,13 @@ class _ReactiveUpdatingExampleState extends State<ReactiveUpdatingExample> {
                 data = [50.0, 70.0, 90.0];
               });
             },
-            child: Text('Update Data'),
+            child: const Text('Update Data'),
           ),
+          ElevatedButton( 
+                  onPressed: () { 
+                    Navigator.push( context, MaterialPageRoute(builder: (context) => TwoWayCommunication())); 
+                  }, child: const Text('Next'), 
+          )
         ],
       ),
     );
