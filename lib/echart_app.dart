@@ -1,4 +1,5 @@
 import 'package:echart_app/communication.dart';
+import 'package:echart_app/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
 
@@ -50,7 +51,7 @@ class _ReactiveUpdatingExampleState extends State<ReactiveUpdatingExample> {
           ),
           ElevatedButton( 
                   onPressed: () { 
-                    Navigator.push( context, MaterialPageRoute(builder: (context) => TwoWayCommunication())); 
+                    Navigator.push( context, MaterialPageRoute(builder: (context) => const MyApp())); 
                   }, child: const Text('Next'), 
           )
         ],
