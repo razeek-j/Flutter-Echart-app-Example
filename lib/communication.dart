@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
+import 'package:http/http.dart' as http;
 
 class DatabaseUpdatingExample extends StatefulWidget {
   const DatabaseUpdatingExample({super.key});
@@ -11,6 +14,14 @@ class DatabaseUpdatingExample extends StatefulWidget {
 }
 
 class _DatabaseUpdatingExampleState extends State<DatabaseUpdatingExample> {
+  
+  Future fetchState() async {
+    var responce = await http.get(Uri.parse('https://api.openbrewerydb.org/breweries'));
+    if(responce.statusCode == 200){
+      var State = json.decode(responce.body);
+    }
+  }
+
   List<double> data = [150.0, 30.0, 50.0];
 
   @override

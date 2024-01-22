@@ -1,5 +1,7 @@
 import 'package:echart_app/communication.dart';
+import 'package:echart_app/piechart.dart';
 import 'package:echart_app/test.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
 
@@ -54,7 +56,7 @@ class _ReactiveUpdatingExampleState extends State<ReactiveUpdatingExample> {
           ),
           ElevatedButton( 
                   onPressed: () { 
-                    Navigator.push( context, MaterialPageRoute(builder: (context) =>  const DatabaseUpdatingExample())); 
+                    Navigator.push( context, MaterialPageRoute(builder: (context) =>  const PieChartPage())); 
                   }, child: const Text('Next'), 
           )
         ],
