@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
 
 class ReactiveUpdatingExample extends StatefulWidget {
+  const ReactiveUpdatingExample({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _ReactiveUpdatingExampleState createState() =>
       _ReactiveUpdatingExampleState();
 }
@@ -16,11 +19,11 @@ class _ReactiveUpdatingExampleState extends State<ReactiveUpdatingExample> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reactive Updating Example'),
+        title: const Text('Reactive Updating Example'),
       ),
       body: Column(
         children: [
-          Container(
+          SizedBox(
             height: 300,
             child: Echarts(
               option: '''
@@ -51,7 +54,7 @@ class _ReactiveUpdatingExampleState extends State<ReactiveUpdatingExample> {
           ),
           ElevatedButton( 
                   onPressed: () { 
-                    Navigator.push( context, MaterialPageRoute(builder: (context) => const MyApp())); 
+                    Navigator.push( context, MaterialPageRoute(builder: (context) =>  const DatabaseUpdatingExample())); 
                   }, child: const Text('Next'), 
           )
         ],

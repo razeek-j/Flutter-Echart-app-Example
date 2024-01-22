@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
 
-class DatabaseChart extends StatelessWidget {
-  DatabaseChart({super.key});
+class DatabaseUpdatingExample extends StatefulWidget {
+  const DatabaseUpdatingExample({super.key});
 
-  List<double> data = [10.0, 30.0, 50.0];
+  @override
+  // ignore: library_private_types_in_public_api
+  _DatabaseUpdatingExampleState createState() =>
+      _DatabaseUpdatingExampleState();
+}
+
+class _DatabaseUpdatingExampleState extends State<DatabaseUpdatingExample> {
+  List<double> data = [150.0, 30.0, 50.0];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reactive Updating Example'),
+        title: const Text('Database Updating Example'),
       ),
       body: Column(
         children: [
-          Container(
+          SizedBox(
             height: 300,
             child: Echarts(
               option: '''
@@ -35,15 +43,12 @@ class DatabaseChart extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
+              setState(() {
                 // Simulate data update
                 data = [50.0, 70.0, 90.0];
+              });
             },
             child: const Text('Update Data'),
-          ),
-          ElevatedButton( 
-                  onPressed: () { 
-                    Navigator.push( context, MaterialPageRoute(builder: (context) => const MyApp())); 
-                  }, child: const Text('Next'), 
           )
         ],
       ),
