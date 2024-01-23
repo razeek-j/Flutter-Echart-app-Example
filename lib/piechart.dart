@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/services.dart'; // Import the services.dart package
+import 'package:flutter_echarts/flutter_echarts.dart';
 
-class PieChartPage extends StatefulWidget {
-  const PieChartPage({super.key});
+class EChartPieChartPage extends StatefulWidget {
+  const EChartPieChartPage({super.key});
 
   @override
-  _PieChartPage createState() => _PieChartPage();
+  _EChartPieChartPageState createState() => _EChartPieChartPageState();
 }
 
-class _PieChartPage extends State<PieChartPage> {
+class _EChartPieChartPageState extends State<EChartPieChartPage> {
   List<Map<String, dynamic>> jsonData = [];
 
   @override
@@ -20,22 +20,22 @@ class _PieChartPage extends State<PieChartPage> {
   }
 
   Future<void> fetchData() async {
-    final response = await http.get(Uri.parse('https://api.openbrewerydb.org/breweries')); // Replace with your API endpoint
+    // Load the local JSON file
+    final String jsonString = await rootBundle.loadString('assets/dataoffline.json');
 
-    if (response.statusCode == 200) {
-      setState(() {
-        jsonData = List<Map<String, dynamic>>.from(json.decode(response.body));
-      });
-    } else {
-      throw Exception('Failed to load JSON data');
-    }
+    // Parse the JSON data
+    List<dynamic> jsonList = json.decode(jsonString);
+    jsonData = List<Map<String, dynamic>>.from(jsonList);
+
+    // setState to trigger a rebuild with the loaded data
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PieChart State Province'),
+        title: const Text('EChart PieChart State Province'),
       ),
       body: Column(
         children: [
@@ -52,39 +52,66 @@ class _PieChartPage extends State<PieChartPage> {
   Widget buildEChart() {
     Map<String, int> stateCounts = {};
     for (var data in jsonData) {
-      String state = data['state_province'];
-      stateCounts[state] = (stateCounts[state] ?? 0) + 1;
+      String? state = data['state_province'];
+      if (state != null) {
+        stateCounts[state] = (stateCounts[state] ?? 0) + 1;
+      }
     }
 
-    // Create data for EChart
-    List<PieChartSectionData> pieChartSections = [];
-    int index = 0;
+    // Prepare data for EChart
+    List<Map<String, dynamic>> chartData = [];
     stateCounts.forEach((state, count) {
-      pieChartSections.add(
-        PieChartSectionData(
-          color: Colors.primaries[index % Colors.primaries.length],
-          value: count.toDouble(),
-          title: '$state\n$count',
-          radius: 100,
-          titleStyle: const TextStyle(fontSize: 12, color: Colors.white),
-        ),
-      );
-      index++;
+      chartData.add({'name': state, 'value': count});
     });
 
-    return PieChart(
-  PieChartData(
-    sections: pieChartSections,
-    borderData: FlBorderData(show: false),
-    centerSpaceRadius: 0,
-    sectionsSpace: 0,
-    pieTouchData: PieTouchData(
-      touchCallback: (FlTouchEvent event, PieTouchResponse? response) {
-        // Your touch handling logic here
+    // Build EChart options
+    String option = '''
+    {
+      title: {
+        text: 'Breweries by State Province',
+        x: 'center',
       },
-    ),
-  ),
-);
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c} ({d}%)',
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ${jsonEncode(stateCounts.keys.toList())},
+      },
+      series: [
+        {
+          name: 'Breweries',
+          type: 'pie',
+          radius: '55%',
+          center: ['50%', '60%'],
+          data: ${jsonEncode(chartData)},
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)',
+            },
+          },
+          label: {
+            show: true,
+            formatter: '{b} : {c} ({d}%)',
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: '20',
+              fontWeight: 'bold',
+            },
+          },
+        },
+      ],
+    }
+    ''';
 
+    return Echarts(
+      option: option,
+    );
   }
 }

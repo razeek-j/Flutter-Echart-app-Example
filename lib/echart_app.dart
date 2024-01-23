@@ -56,7 +56,7 @@ class _ReactiveUpdatingExampleState extends State<ReactiveUpdatingExample> {
           ),
           ElevatedButton( 
                   onPressed: () { 
-                    Navigator.push( context, MaterialPageRoute(builder: (context) =>  const PieChartPage())); 
+                    Navigator.push( context, MaterialPageRoute(builder: (context) =>  const EChartPieChartPage())); 
                   }, child: const Text('Next'), 
           )
         ],
