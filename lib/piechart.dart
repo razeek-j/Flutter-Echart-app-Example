@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Import the services.dart package
+import 'package:flutter/services.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
 
 class EChartPieChartPage extends StatefulWidget {
@@ -37,81 +37,88 @@ class _EChartPieChartPageState extends State<EChartPieChartPage> {
       appBar: AppBar(
         title: const Text('EChart PieChart State Province'),
       ),
-      body: Column(
-        children: [
-          jsonData.isEmpty
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : buildEChart(),
-        ],
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              jsonData.isEmpty
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : SizedBox(
+                      height: 400, // Set a specific height for the container
+                      child: buildEChart(),
+                    ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
   Widget buildEChart() {
-    Map<String, int> stateCounts = {};
-    for (var data in jsonData) {
-      String? state = data['state_province'];
-      if (state != null) {
-        stateCounts[state] = (stateCounts[state] ?? 0) + 1;
-      }
+  Map<String, int> stateCounts = {};
+  for (var data in jsonData) {
+    String? state = data['state_province'];
+    if (state != null) {
+      stateCounts[state] = (stateCounts[state] ?? 0) + 1;
     }
+  }
 
-    // Prepare data for EChart
-    List<Map<String, dynamic>> chartData = [];
-    stateCounts.forEach((state, count) {
-      chartData.add({'name': state, 'value': count});
-    });
+  // Prepare data for EChart
+  List<Map<String, dynamic>> chartData = [];
+  stateCounts.forEach((state, count) {
+    chartData.add({'name': state, 'value': count});
+  });
 
-    // Build EChart options
-    String option = '''
-    {
-      title: {
-        text: 'Breweries by State Province',
-        x: 'center',
-      },
-      tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)',
-      },
-      legend: {
-        orient: 'vertical',
-        left: 'left',
-        data: ${jsonEncode(stateCounts.keys.toList())},
-      },
-      series: [
-        {
-          name: 'Breweries',
-          type: 'pie',
-          radius: '55%',
-          center: ['50%', '60%'],
-          data: ${jsonEncode(chartData)},
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-            },
-          },
-          label: {
-            show: true,
-            formatter: '{b} : {c} ({d}%)',
-          },
-          emphasis: {
-            label: {
-              show: true,
-              fontSize: '20',
-              fontWeight: 'bold',
-            },
+  // Build EChart options
+  String option = '''
+  {
+    title: {
+      text: 'Breweries by State Province',
+      left: 'center'
+    },
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b} : {c} ({d}%)',
+    },
+    legend: {
+      orient: 'vertical',
+      left: 'left',
+      data: ${jsonEncode(stateCounts.keys.toList())},
+    },
+    series: [
+      {
+        name: 'Breweries',
+        type: 'pie',
+        radius: '55%',
+        data: ${jsonEncode(chartData)},
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)',
           },
         },
-      ],
-    }
-    ''';
-
-    return Echarts(
-      option: option,
-    );
+        label: {
+          show: true,
+          formatter: '{b} : {c} ({d}%)',
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 14, // Adjusted font size
+            fontWeight: 'bold',
+          },
+        },
+      },
+    ],
   }
+  ''';
+
+  return Echarts(
+    option: option,
+  );
+}
+
 }
